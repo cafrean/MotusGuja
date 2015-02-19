@@ -35,6 +35,8 @@ import com.wadpam.guja.oauth2.domain.DFactory;
 import com.wadpam.guja.oauth2.domain.DOAuth2User;
 import com.wadpam.guja.oauth2.provider.Oauth2UserProvider;
 import com.wadpam.guja.oauth2.provider.TokenGenerator;
+import com.wadpam.guja.oauth2.social.LifelogProfile;
+import com.wadpam.guja.oauth2.social.LifelogTemplate;
 import com.wadpam.guja.oauth2.social.SocialProfile;
 import com.wadpam.guja.oauth2.social.SocialTemplate;
 import com.wadpam.guja.web.JsonCharacterEncodingResponseFilter;
@@ -97,12 +99,13 @@ public class OAuth2FederatedResource {
       try {
 
         // TODO Move values to a property file
-        factoryDao.put(DFactoryMapper.newBuilder()
-            .id(FactoryResource.PROVIDER_ID_FACEBOOK)
-            .baseUrl("https://graph.facebook.com")
-            .clientId("255653361131262")
-            .clientSecret("43801e00b5f2e540b672b19943e164ba")
-            .build());
+
+          factoryDao.put(DFactoryMapper.newBuilder()
+                  .id(FactoryResource.PROVIDER_ID_LIFELOG)
+                  .baseUrl("https://platform.lifelog.sonymobile.com")
+                  .clientId("Wgvyjj1RYtGRqDTFHyUI9ctgc08aaVCa")
+                  .clientSecret("7SGFlk7tepW0K6KX")
+                  .build());
 
       } catch (IOException e) {
         LOGGER.error("populating factory", e);
@@ -120,8 +123,6 @@ public class OAuth2FederatedResource {
     connection.setExpireTime(calculateExpirationDate(tokenExpiresIn));
     connection.setUserRoles(OAuth2AuthorizationResource.convertRoles(oauth2User.getRoles()));
     connection.setDisplayName(oauth2User.getDisplayName());
-    connection.setImageUrl(imageUrl);
-    connection.setProfileUrl(profileUrl);
 
     return connection;
   }
@@ -205,12 +206,11 @@ public class OAuth2FederatedResource {
     }
 
     // use the connectionFactory
-    final SocialTemplate socialTemplate = SocialTemplate.create(
-        providerId, access_token, appArg0, null);
+    final LifelogTemplate lifelogTemplate = LifelogTemplate.create(providerId, access_token, null);
 
-    SocialProfile profile = null;
+    LifelogProfile profile = null;
     try {
-      profile = socialTemplate.getProfile();
+      profile = lifelogTemplate.getProfile();
       if (null == profile) {
         throw new UnauthorizedRestException("Invalid connection");
       }
@@ -219,28 +219,17 @@ public class OAuth2FederatedResource {
     }
 
     // providerUserId is optional, fetch it if necessary:
-    final String realProviderUserId = profile.getId();
+    final String realProviderUserId = profile.getUserName();
     if (null == providerUserId) {
       providerUserId = realProviderUserId;
     } else if (!providerUserId.equals(realProviderUserId)) {
       throw new UnauthorizedRestException("Unauthorized federated side mismatch");
     }
 
+      LOGGER.info("Got provideruserID: " + providerUserId);
+
     // load connection from db async style (likely case is new token for existing user)
     final Iterable<DConnection> existingConnections = connectionDao.queryByProviderUserId(providerUserId);
-
-    // extend short-lived token?
-    if (expiresInSeconds < 4601) {
-      SocialTemplate extendTemplate = SocialTemplate.create(providerId, null, socialTemplate.getBaseUrl(), null);
-      DFactory client = factoryDao.get(providerId);
-      if (null != client) {
-        final Map.Entry<String, Integer> extended = extendTemplate.extend(providerId, client.getClientId(), client.getClientSecret(), access_token);
-        if (null != extended) {
-          access_token = extended.getKey();
-          expiresInSeconds = extended.getValue();
-        }
-      }
-    }
 
     boolean isNewUser = !existingConnections.iterator().hasNext();
     DOAuth2User user = null;
@@ -248,16 +237,12 @@ public class OAuth2FederatedResource {
 
       // Create new oauth2 user
       user = userProvider.createUser();
-      user.setDisplayName(profile.getDisplayName());
-      user.setEmail(profile.getEmail());
-      user.setProfileLink(profile.getProfileUrl());
+      user.setDisplayName(profile.getUserName());
       user.setRoles(OAuth2UserResource.DEFAULT_ROLES_USER);
 
     } else {
       user = userProvider.getUserById(existingConnections.iterator().next().getUserId());
     }
-    // Always update thumbnail
-    user.setThumbnailUrl(profile.getThumbnailUrl());
 
     user = userProvider.putUser(user);
 
@@ -276,9 +261,6 @@ public class OAuth2FederatedResource {
 
     }
     // Always update some properties
-    connection.setAppArg0(appArg0);
-    connection.setImageUrl(profile.getProfileUrl());
-    connection.setProfileUrl(profile.getProfileUrl());
     connection.setUserRoles(OAuth2AuthorizationResource.convertRoles(user.getRoles()));
     connectionDao.put(connection);
 
@@ -286,7 +268,7 @@ public class OAuth2FederatedResource {
     removeExpiredConnections(providerId, existingConnections);
 
     // do not return and use the providers token, but instead create self:
-    connection = generateConnection(user, profile.getProfileUrl(), profile.getThumbnailUrl());
+    connection = generateConnection(user, null, null);
     connectionDao.put(connection);
 
     return Response.status(isNewUser ? Response.Status.CREATED : Response.Status.OK)
