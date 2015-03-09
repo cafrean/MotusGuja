@@ -103,8 +103,8 @@ public class OAuth2FederatedResource {
           factoryDao.put(DFactoryMapper.newBuilder()
                   .id(FactoryResource.PROVIDER_ID_LIFELOG)
                   .baseUrl("https://platform.lifelog.sonymobile.com")
-                  .clientId("Wgvyjj1RYtGRqDTFHyUI9ctgc08aaVCa")
-                  .clientSecret("7SGFlk7tepW0K6KX")
+                  .clientId("hRWEZxmekgG11723mTV5TPLeqxcG5vMC")
+                  .clientSecret("bw5AqcTnFGbAJy2r")
                   .build());
 
       } catch (IOException e) {
