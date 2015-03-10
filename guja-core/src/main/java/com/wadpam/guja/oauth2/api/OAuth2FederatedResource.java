@@ -258,7 +258,8 @@ public class OAuth2FederatedResource {
       connection.setAccessToken(accessTokenGenerator.generate());
         connection.setLifelogAccessToken(lifelogAccessToken);
         connection.setUnnamedAccessToken(unnamedAccessToken);
-      connection.setProviderId(providerId);
+        // TODO: Change provider ID to something more relevant.
+      connection.setProviderId("self");
       connection.setProviderUserId(providerUserId);
       connection.setSecret(secret);
       connection.setDisplayName(user.getDisplayName());
