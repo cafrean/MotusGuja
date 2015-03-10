@@ -51,14 +51,10 @@ public class DConnection extends AbstractLongEntity {
   @Basic
   private String accessToken;
 
-  /**
-   * Specify for each provider what this property contains.
-   * For Salesforce, it is instance_url
-   */
-  @Basic
-  private String appArg0;
+    @Basic
+    private String secondaryAccessToken;
 
-  @Basic
+    @Basic
   private String displayName;
 
   @Basic
@@ -90,8 +86,8 @@ public class DConnection extends AbstractLongEntity {
 
   @Override
   public String subString() {
-    return String.format("%s, accessToken=%s, userId=%s, appArg0=%s, userRoles=%s",
-        super.subString(), accessToken, userId, appArg0, userRoles);
+    return String.format("%s, accessToken=%s, userId=%s, secondaryAccessToken=%s, userRoles=%s",
+        super.subString(), accessToken, userId, secondaryAccessToken, userRoles);
   }
 
   public static ArrayList<String> convertRoles(String from) {
@@ -113,12 +109,12 @@ public class DConnection extends AbstractLongEntity {
     this.accessToken = accessToken;
   }
 
-  public String getAppArg0() {
-    return appArg0;
+  public String getSecondaryAccessToken() {
+    return secondaryAccessToken;
   }
 
-  public void setAppArg0(String appArg0) {
-    this.appArg0 = appArg0;
+  public void setSecondaryAccessToken(String secondaryAccessToken) {
+    this.secondaryAccessToken = secondaryAccessToken;
   }
 
   public String getDisplayName() {

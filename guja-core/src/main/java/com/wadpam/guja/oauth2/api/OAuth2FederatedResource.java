@@ -147,7 +147,7 @@ public class OAuth2FederatedResource {
    * @param access_token   access token
    * @param secret         secret
    * @param expiresIn      access token expiration
-   * @param appArg0        ?
+   * @param secondaryAccessToken    A secondary access token - used when performing federated registration with more than one service.
    * @return the userId associated with the Connection, null if new Connection
    */
   @GET
@@ -157,10 +157,10 @@ public class OAuth2FederatedResource {
       @QueryParam("access_token") String access_token,
       @QueryParam("secret") String secret,
       @QueryParam("expires_in") @DefaultValue("4601") Integer expiresIn,
-      @QueryParam("appArg0") String appArg0
+      @QueryParam("secondaryAccessToken") String secondaryAccessToken
   ) throws IOException {
     return registerFederated(access_token, providerId, providerUserId,
-        secret, expiresIn, appArg0);
+        secret, expiresIn, secondaryAccessToken);
   }
 
 
@@ -172,7 +172,7 @@ public class OAuth2FederatedResource {
    * @param access_token   access token
    * @param secret         secret
    * @param expiresIn      access token expiration
-   * @param appArg0        ?
+   * @param secondaryAccessToken    The secondary access token - used when performing federated registration with more than one service.
    * @return the userId associated with the Connection, null if new Connection
    */
   @GET
@@ -183,10 +183,10 @@ public class OAuth2FederatedResource {
       @QueryParam("access_token") String access_token,
       @QueryParam("secret") String secret,
       @QueryParam("expires_in") @DefaultValue("4601") Integer expiresIn,
-      @QueryParam("appArg0") String appArg0
+      @QueryParam("secondaryAccessToken") String secondaryAccessToken
   ) throws IOException {
     return registerFederated(access_token, providerId, providerUserId,
-        secret, expiresIn, appArg0);
+        secret, expiresIn, secondaryAccessToken);
   }
 
 
@@ -196,7 +196,7 @@ public class OAuth2FederatedResource {
       String providerUserId,
       String secret,
       Integer expiresInSeconds,
-      String appArg0) throws IOException {
+      String secondaryAccessToken) throws IOException {
 
     checkNotNull(access_token);
     checkNotNull(providerId);
@@ -252,6 +252,7 @@ public class OAuth2FederatedResource {
 
       connection = new DConnection();
       connection.setAccessToken(access_token);
+        connection.setSecondaryAccessToken(secondaryAccessToken);
       connection.setProviderId(providerId);
       connection.setProviderUserId(providerUserId);
       connection.setSecret(secret);
@@ -266,10 +267,6 @@ public class OAuth2FederatedResource {
 
     // Remove expired connections for the user
     removeExpiredConnections(providerId, existingConnections);
-
-    // do not return and use the providers token, but instead create self:
-    connection = generateConnection(user, null, null);
-    connectionDao.put(connection);
 
     return Response.status(isNewUser ? Response.Status.CREATED : Response.Status.OK)
         .cookie(createCookie(connection.getAccessToken(), null != expiresInSeconds ? expiresInSeconds : tokenExpiresIn))
