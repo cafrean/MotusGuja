@@ -12,7 +12,7 @@ import com.wadpam.guja.domain.DContact;
 /**
  * The DContact domain-object specific mapping methods go here.
  *
- * Generated on 2015-02-10T00:27:00.783+0100.
+ * Generated on 2015-03-10T16:06:52.225+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class DContactMapper
@@ -41,6 +41,8 @@ public class DContactMapper
     MOBILEPHONE("mobilePhone"),
     OTHEREMAIL("otherEmail"),
     OTHERPHONE("otherPhone"),
+    PRIMARYCUSTOMINDEX("primaryCustomIndex"),
+    SECONDARYCUSTOMINDEX("secondaryCustomIndex"),
     TAGS("tags"),
     TWITTER("twitter"),
     UNIQUETAG("uniqueTag"),
@@ -100,6 +102,8 @@ public class DContactMapper
     entity.setMobilePhone(supplier.getString(value, Field.MOBILEPHONE.getFieldName()));
     entity.setOtherEmail(supplier.getString(value, Field.OTHEREMAIL.getFieldName()));
     entity.setOtherPhone(supplier.getString(value, Field.OTHERPHONE.getFieldName()));
+    entity.setPrimaryCustomIndex(supplier.getString(value, Field.PRIMARYCUSTOMINDEX.getFieldName()));
+    entity.setSecondaryCustomIndex(supplier.getString(value, Field.SECONDARYCUSTOMINDEX.getFieldName()));
     entity.setTags(supplier.getCollection(value, Field.TAGS.getFieldName()));
     entity.setTwitter(supplier.getString(value, Field.TWITTER.getFieldName()));
     entity.setUniqueTag(supplier.getString(value, Field.UNIQUETAG.getFieldName()));
@@ -190,6 +194,8 @@ public class DContactMapper
     supplier.setString(value, Field.MOBILEPHONE.getFieldName(), entity.getMobilePhone());
     supplier.setString(value, Field.OTHEREMAIL.getFieldName(), entity.getOtherEmail());
     supplier.setString(value, Field.OTHERPHONE.getFieldName(), entity.getOtherPhone());
+    supplier.setString(value, Field.PRIMARYCUSTOMINDEX.getFieldName(), entity.getPrimaryCustomIndex());
+    supplier.setString(value, Field.SECONDARYCUSTOMINDEX.getFieldName(), entity.getSecondaryCustomIndex());
     supplier.setCollection(value, Field.TAGS.getFieldName(), entity.getTags());
     supplier.setString(value, Field.TWITTER.getFieldName(), entity.getTwitter());
     supplier.setString(value, Field.UNIQUETAG.getFieldName(), entity.getUniqueTag());
@@ -308,6 +314,16 @@ public class DContactMapper
 
     public Builder otherPhone(String otherPhone) {
       entity.setOtherPhone(otherPhone);
+      return this;
+    }
+
+    public Builder primaryCustomIndex(String primaryCustomIndex) {
+      entity.setPrimaryCustomIndex(primaryCustomIndex);
+      return this;
+    }
+
+    public Builder secondaryCustomIndex(String secondaryCustomIndex) {
+      entity.setSecondaryCustomIndex(secondaryCustomIndex);
       return this;
     }
 

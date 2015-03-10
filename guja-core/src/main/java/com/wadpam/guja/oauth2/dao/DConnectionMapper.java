@@ -12,7 +12,7 @@ import com.wadpam.guja.oauth2.domain.DConnection;
 /**
  * The DConnection domain-object specific mapping methods go here.
  *
- * Generated on 2015-03-10T15:11:21.539+0100.
+ * Generated on 2015-03-10T16:07:02.445+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class DConnectionMapper
@@ -28,12 +28,13 @@ public class DConnectionMapper
     DISPLAYNAME("displayName"),
     EXPIRETIME("expireTime"),
     IMAGEURL("imageUrl"),
+    LIFELOGACCESSTOKEN("lifelogAccessToken"),
     PROFILEURL("profileUrl"),
     PROVIDERID("providerId"),
     PROVIDERUSERID("providerUserId"),
     REFRESHTOKEN("refreshToken"),
-    SECONDARYACCESSTOKEN("secondaryAccessToken"),
     SECRET("secret"),
+    UNNAMEDACCESSTOKEN("unnamedAccessToken"),
     UPDATEDBY("updatedBy"),
     UPDATEDDATE("updatedDate"),
     USERID("userId"),
@@ -74,12 +75,13 @@ public class DConnectionMapper
     entity.setDisplayName(supplier.getString(value, Field.DISPLAYNAME.getFieldName()));
     entity.setExpireTime(supplier.getDate(value, Field.EXPIRETIME.getFieldName()));
     entity.setImageUrl(supplier.getString(value, Field.IMAGEURL.getFieldName()));
+    entity.setLifelogAccessToken(supplier.getString(value, Field.LIFELOGACCESSTOKEN.getFieldName()));
     entity.setProfileUrl(supplier.getString(value, Field.PROFILEURL.getFieldName()));
     entity.setProviderId(supplier.getString(value, Field.PROVIDERID.getFieldName()));
     entity.setProviderUserId(supplier.getString(value, Field.PROVIDERUSERID.getFieldName()));
     entity.setRefreshToken(supplier.getString(value, Field.REFRESHTOKEN.getFieldName()));
-    entity.setSecondaryAccessToken(supplier.getString(value, Field.SECONDARYACCESSTOKEN.getFieldName()));
     entity.setSecret(supplier.getString(value, Field.SECRET.getFieldName()));
+    entity.setUnnamedAccessToken(supplier.getString(value, Field.UNNAMEDACCESSTOKEN.getFieldName()));
     entity.setUpdatedBy(supplier.getString(value, Field.UPDATEDBY.getFieldName()));
     entity.setUpdatedDate(supplier.getDate(value, Field.UPDATEDDATE.getFieldName()));
     entity.setUserId(supplier.getLong(value, Field.USERID.getFieldName()));
@@ -154,12 +156,13 @@ public class DConnectionMapper
     supplier.setString(value, Field.DISPLAYNAME.getFieldName(), entity.getDisplayName());
     supplier.setDate(value, Field.EXPIRETIME.getFieldName(), entity.getExpireTime());
     supplier.setString(value, Field.IMAGEURL.getFieldName(), entity.getImageUrl());
+    supplier.setString(value, Field.LIFELOGACCESSTOKEN.getFieldName(), entity.getLifelogAccessToken());
     supplier.setString(value, Field.PROFILEURL.getFieldName(), entity.getProfileUrl());
     supplier.setString(value, Field.PROVIDERID.getFieldName(), entity.getProviderId());
     supplier.setString(value, Field.PROVIDERUSERID.getFieldName(), entity.getProviderUserId());
     supplier.setString(value, Field.REFRESHTOKEN.getFieldName(), entity.getRefreshToken());
-    supplier.setString(value, Field.SECONDARYACCESSTOKEN.getFieldName(), entity.getSecondaryAccessToken());
     supplier.setString(value, Field.SECRET.getFieldName(), entity.getSecret());
+    supplier.setString(value, Field.UNNAMEDACCESSTOKEN.getFieldName(), entity.getUnnamedAccessToken());
     supplier.setString(value, Field.UPDATEDBY.getFieldName(), entity.getUpdatedBy());
     supplier.setDate(value, Field.UPDATEDDATE.getFieldName(), entity.getUpdatedDate());
     supplier.setLong(value, Field.USERID.getFieldName(), entity.getUserId());
@@ -212,6 +215,11 @@ public class DConnectionMapper
       return this;
     }
 
+    public Builder lifelogAccessToken(String lifelogAccessToken) {
+      entity.setLifelogAccessToken(lifelogAccessToken);
+      return this;
+    }
+
     public Builder profileUrl(String profileUrl) {
       entity.setProfileUrl(profileUrl);
       return this;
@@ -232,13 +240,13 @@ public class DConnectionMapper
       return this;
     }
 
-    public Builder secondaryAccessToken(String secondaryAccessToken) {
-      entity.setSecondaryAccessToken(secondaryAccessToken);
+    public Builder secret(String secret) {
+      entity.setSecret(secret);
       return this;
     }
 
-    public Builder secret(String secret) {
-      entity.setSecret(secret);
+    public Builder unnamedAccessToken(String unnamedAccessToken) {
+      entity.setUnnamedAccessToken(unnamedAccessToken);
       return this;
     }
 

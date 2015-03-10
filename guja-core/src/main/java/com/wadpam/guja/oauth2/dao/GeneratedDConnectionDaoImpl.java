@@ -21,7 +21,7 @@ import com.wadpam.guja.oauth2.domain.DConnection;
 /**
  * The DConnection domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2015-03-10T15:11:21.539+0100.
+ * Generated on 2015-03-10T16:07:02.445+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDConnectionDaoImpl
@@ -90,6 +90,15 @@ public class GeneratedDConnectionDaoImpl
   }
 
   /**
+   * query-by method for field lifelogAccessToken
+   * @param lifelogAccessToken the specified attribute
+   * @return an Iterable of DConnections for the specified lifelogAccessToken
+   */
+  public Iterable<DConnection> queryByLifelogAccessToken(java.lang.String lifelogAccessToken) {
+    return queryByField(null, DConnectionMapper.Field.LIFELOGACCESSTOKEN.getFieldName(), lifelogAccessToken);
+  }
+
+  /**
    * query-by method for field profileUrl
    * @param profileUrl the specified attribute
    * @return an Iterable of DConnections for the specified profileUrl
@@ -126,21 +135,21 @@ public class GeneratedDConnectionDaoImpl
   }
 
   /**
-   * query-by method for field secondaryAccessToken
-   * @param secondaryAccessToken the specified attribute
-   * @return an Iterable of DConnections for the specified secondaryAccessToken
-   */
-  public Iterable<DConnection> queryBySecondaryAccessToken(java.lang.String secondaryAccessToken) {
-    return queryByField(null, DConnectionMapper.Field.SECONDARYACCESSTOKEN.getFieldName(), secondaryAccessToken);
-  }
-
-  /**
    * query-by method for field secret
    * @param secret the specified attribute
    * @return an Iterable of DConnections for the specified secret
    */
   public Iterable<DConnection> queryBySecret(java.lang.String secret) {
     return queryByField(null, DConnectionMapper.Field.SECRET.getFieldName(), secret);
+  }
+
+  /**
+   * query-by method for field unnamedAccessToken
+   * @param unnamedAccessToken the specified attribute
+   * @return an Iterable of DConnections for the specified unnamedAccessToken
+   */
+  public Iterable<DConnection> queryByUnnamedAccessToken(java.lang.String unnamedAccessToken) {
+    return queryByField(null, DConnectionMapper.Field.UNNAMEDACCESSTOKEN.getFieldName(), unnamedAccessToken);
   }
 
   /**

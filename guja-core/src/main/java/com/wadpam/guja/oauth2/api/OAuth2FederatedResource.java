@@ -147,7 +147,7 @@ public class OAuth2FederatedResource {
    * @param access_token   access token
    * @param secret         secret
    * @param expiresIn      access token expiration
-   * @param secondaryAccessToken    A secondary access token - used when performing federated registration with more than one service.
+   * @param lifelogAccessToken    A secondary access token - used when performing federated registration with more than one service.
    * @return the userId associated with the Connection, null if new Connection
    */
   @GET
@@ -157,10 +157,11 @@ public class OAuth2FederatedResource {
       @QueryParam("access_token") String access_token,
       @QueryParam("secret") String secret,
       @QueryParam("expires_in") @DefaultValue("4601") Integer expiresIn,
-      @QueryParam("secondaryAccessToken") String secondaryAccessToken
+      @QueryParam("lifelogAccessToken") String lifelogAccessToken,
+      @QueryParam("unnamedAccessToken") String unnamedAccessToken
   ) throws IOException {
     return registerFederated(access_token, providerId, providerUserId,
-        secret, expiresIn, secondaryAccessToken);
+        secret, expiresIn, lifelogAccessToken, unnamedAccessToken);
   }
 
 
@@ -172,7 +173,7 @@ public class OAuth2FederatedResource {
    * @param access_token   access token
    * @param secret         secret
    * @param expiresIn      access token expiration
-   * @param secondaryAccessToken    The secondary access token - used when performing federated registration with more than one service.
+   * @param lifelogAccessToken    The secondary access token - used when performing federated registration with more than one service.
    * @return the userId associated with the Connection, null if new Connection
    */
   @GET
@@ -183,10 +184,11 @@ public class OAuth2FederatedResource {
       @QueryParam("access_token") String access_token,
       @QueryParam("secret") String secret,
       @QueryParam("expires_in") @DefaultValue("4601") Integer expiresIn,
-      @QueryParam("secondaryAccessToken") String secondaryAccessToken
+      @QueryParam("lifelogAccessToken") String lifelogAccessToken,
+      @QueryParam("unnamedAccessToken") String unnamedAccessToken
   ) throws IOException {
     return registerFederated(access_token, providerId, providerUserId,
-        secret, expiresIn, secondaryAccessToken);
+        secret, expiresIn, lifelogAccessToken, unnamedAccessToken);
   }
 
 
@@ -196,9 +198,11 @@ public class OAuth2FederatedResource {
       String providerUserId,
       String secret,
       Integer expiresInSeconds,
-      String secondaryAccessToken) throws IOException {
+      String lifelogAccessToken,
+      String unnamedAccessToken) throws IOException {
 
-    checkNotNull(access_token);
+    checkNotNull(lifelogAccessToken);
+      // TODO: Check if unnamedAccessToken is null.
     checkNotNull(providerId);
 
     if (null == expiresInSeconds) {
@@ -206,7 +210,7 @@ public class OAuth2FederatedResource {
     }
 
     // use the connectionFactory
-    final LifelogTemplate lifelogTemplate = LifelogTemplate.create(providerId, access_token, null);
+    final LifelogTemplate lifelogTemplate = LifelogTemplate.create(providerId, lifelogAccessToken, null);
 
     LifelogProfile profile = null;
     try {
@@ -251,8 +255,9 @@ public class OAuth2FederatedResource {
     if (null == connection) {
 
       connection = new DConnection();
-      connection.setAccessToken(access_token);
-        connection.setSecondaryAccessToken(secondaryAccessToken);
+      connection.setAccessToken(accessTokenGenerator.generate());
+        connection.setLifelogAccessToken(lifelogAccessToken);
+        connection.setUnnamedAccessToken(unnamedAccessToken);
       connection.setProviderId(providerId);
       connection.setProviderUserId(providerUserId);
       connection.setSecret(secret);

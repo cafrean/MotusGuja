@@ -40,165 +40,176 @@ import java.util.Date;
  */
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"accessToken"}),
-    @UniqueConstraint(columnNames = {"refreshToken"})})
+        @UniqueConstraint(columnNames = {"refreshToken"})})
 public class DConnection extends AbstractLongEntity {
 
-  public static final String ROLE_SEPARATOR = ",";
-
-  @Basic
-  private Long userId;
-
-  @Basic
-  private String accessToken;
+    public static final String ROLE_SEPARATOR = ",";
 
     @Basic
-    private String secondaryAccessToken;
+    private Long userId;
 
     @Basic
-  private String displayName;
+    private String accessToken;
 
-  @Basic
-  private Date expireTime;
+    @Basic
+    private String lifelogAccessToken;
 
-  @Basic
-  private String imageUrl;
+    @Basic
+    private String unnamedAccessToken;
 
-  @Basic
-  private String profileUrl;
+    @Basic
+    private String displayName;
 
-  @Basic
-  private String providerId;
+    @Basic
+    private Date expireTime;
 
-  @Basic
-  private String providerUserId;
+    @Basic
+    private String imageUrl;
 
-  @Basic
-  private String refreshToken;
+    @Basic
+    private String profileUrl;
 
-  @Basic
-  private String secret;
+    @Basic
+    private String providerId;
 
-  /**
-   * Comma-separated String, populated by registerFederated()
-   */
-  @Basic
-  private String userRoles;
+    @Basic
+    private String providerUserId;
 
-  @Override
-  public String subString() {
-    return String.format("%s, accessToken=%s, userId=%s, secondaryAccessToken=%s, userRoles=%s",
-        super.subString(), accessToken, userId, secondaryAccessToken, userRoles);
-  }
+    @Basic
+    private String refreshToken;
 
-  public static ArrayList<String> convertRoles(String from) {
-    final ArrayList<String> to = new ArrayList<String>();
-    if (null != from) {
-      final String[] roles = from.split(ROLE_SEPARATOR);
-      for (String r : roles) {
-        to.add(r.trim());
-      }
+    @Basic
+    private String secret;
+
+    /**
+     * Comma-separated String, populated by registerFederated()
+     */
+    @Basic
+    private String userRoles;
+
+    @Override
+    public String subString() {
+        return String.format("%s, accessToken=%s, userId=%s, lifelogAccessToken=%s, unnamedAccessToken=%s userRoles=%s",
+                super.subString(), accessToken, userId, lifelogAccessToken, unnamedAccessToken, userRoles);
     }
-    return to;
-  }
 
-  public String getAccessToken() {
-    return accessToken;
-  }
+    public static ArrayList<String> convertRoles(String from) {
+        final ArrayList<String> to = new ArrayList<String>();
+        if (null != from) {
+            final String[] roles = from.split(ROLE_SEPARATOR);
+            for (String r : roles) {
+                to.add(r.trim());
+            }
+        }
+        return to;
+    }
 
-  public void setAccessToken(String accessToken) {
-    this.accessToken = accessToken;
-  }
+    public String getAccessToken() {
+        return accessToken;
+    }
 
-  public String getSecondaryAccessToken() {
-    return secondaryAccessToken;
-  }
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
-  public void setSecondaryAccessToken(String secondaryAccessToken) {
-    this.secondaryAccessToken = secondaryAccessToken;
-  }
+    public String getLifelogAccessToken() {
+        return lifelogAccessToken;
+    }
 
-  public String getDisplayName() {
-    return displayName;
-  }
+    public void setLifelogAccessToken(String secondaryAccessToken) {
+        this.lifelogAccessToken = secondaryAccessToken;
+    }
 
-  public void setDisplayName(String displayName) {
-    this.displayName = displayName;
-  }
+    public String getDisplayName() {
+        return displayName;
+    }
 
-  public Date getExpireTime() {
-    return expireTime;
-  }
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-  public void setExpireTime(Date expireTime) {
-    this.expireTime = expireTime;
-  }
+    public Date getExpireTime() {
+        return expireTime;
+    }
 
-  public String getImageUrl() {
-    return imageUrl;
-  }
+    public void setExpireTime(Date expireTime) {
+        this.expireTime = expireTime;
+    }
 
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
-  }
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
-  public String getProfileUrl() {
-    return profileUrl;
-  }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
-  public void setProfileUrl(String profileUrl) {
-    this.profileUrl = profileUrl;
-  }
+    public String getProfileUrl() {
+        return profileUrl;
+    }
 
-  public String getProviderId() {
-    return providerId;
-  }
+    public void setProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
 
-  public void setProviderId(String providerId) {
-    this.providerId = providerId;
-  }
+    public String getProviderId() {
+        return providerId;
+    }
 
-  public String getProviderUserId() {
-    return providerUserId;
-  }
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
 
-  public void setProviderUserId(String providerUserId) {
-    this.providerUserId = providerUserId;
-  }
+    public String getProviderUserId() {
+        return providerUserId;
+    }
 
-  public String getRefreshToken() {
-    return refreshToken;
-  }
+    public void setProviderUserId(String providerUserId) {
+        this.providerUserId = providerUserId;
+    }
 
-  public void setRefreshToken(String refreshToken) {
-    this.refreshToken = refreshToken;
-  }
+    public String getRefreshToken() {
+        return refreshToken;
+    }
 
-  public String getSecret() {
-    return secret;
-  }
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
-  public void setSecret(String secret) {
-    this.secret = secret;
-  }
+    public String getSecret() {
+        return secret;
+    }
 
-  public Long getUserId() {
-    return userId;
-  }
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
 
-  public void setUserId(Long userId) {
-    this.userId = userId;
-  }
+    public Long getUserId() {
+        return userId;
+    }
 
-  public String getUserRoles() {
-    return userRoles;
-  }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-  public void setUserRoles(String userRoles) {
-    this.userRoles = userRoles;
-  }
+    public String getUserRoles() {
+        return userRoles;
+    }
 
-  public Collection<String> getRoles() {
-    return convertRoles(userRoles);
-  }
+    public void setUserRoles(String userRoles) {
+        this.userRoles = userRoles;
+    }
+
+    public Collection<String> getRoles() {
+        return convertRoles(userRoles);
+    }
+
+    public String getUnnamedAccessToken() {
+        return unnamedAccessToken;
+    }
+
+    public void setUnnamedAccessToken(String unnamedAccessToken) {
+        this.unnamedAccessToken = unnamedAccessToken;
+    }
 
 }

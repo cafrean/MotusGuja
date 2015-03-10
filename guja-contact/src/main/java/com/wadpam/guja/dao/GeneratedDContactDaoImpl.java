@@ -29,7 +29,7 @@ import javax.cache.annotation.CacheValue;
 /**
  * The DContact domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2015-02-10T00:27:00.783+0100.
+ * Generated on 2015-03-10T16:06:52.225+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDContactDaoImpl
@@ -222,6 +222,24 @@ public class GeneratedDContactDaoImpl
    */
   public Iterable<DContact> queryByOtherPhone(Object parent, java.lang.String otherPhone) {
     return queryByField(parent, DContactMapper.Field.OTHERPHONE.getFieldName(), otherPhone);
+  }
+
+  /**
+   * query-by method for field primaryCustomIndex
+   * @param primaryCustomIndex the specified attribute
+   * @return an Iterable of DContacts for the specified primaryCustomIndex
+   */
+  public Iterable<DContact> queryByPrimaryCustomIndex(Object parent, java.lang.String primaryCustomIndex) {
+    return queryByField(parent, DContactMapper.Field.PRIMARYCUSTOMINDEX.getFieldName(), primaryCustomIndex);
+  }
+
+  /**
+   * query-by method for field secondaryCustomIndex
+   * @param secondaryCustomIndex the specified attribute
+   * @return an Iterable of DContacts for the specified secondaryCustomIndex
+   */
+  public Iterable<DContact> queryBySecondaryCustomIndex(Object parent, java.lang.String secondaryCustomIndex) {
+    return queryByField(parent, DContactMapper.Field.SECONDARYCUSTOMINDEX.getFieldName(), secondaryCustomIndex);
   }
 
   /**
