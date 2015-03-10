@@ -12,7 +12,7 @@ import com.wadpam.guja.oauth2.domain.DConnection;
 /**
  * The DConnection domain-object specific mapping methods go here.
  *
- * Generated on 2015-01-20T22:12:36.907+0100.
+ * Generated on 2015-03-10T15:11:21.539+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class DConnectionMapper
@@ -23,7 +23,6 @@ public class DConnectionMapper
   public enum Field {
     ID("id"),
     ACCESSTOKEN("accessToken"),
-    APPARG0("appArg0"),
     CREATEDBY("createdBy"),
     CREATEDDATE("createdDate"),
     DISPLAYNAME("displayName"),
@@ -33,6 +32,7 @@ public class DConnectionMapper
     PROVIDERID("providerId"),
     PROVIDERUSERID("providerUserId"),
     REFRESHTOKEN("refreshToken"),
+    SECONDARYACCESSTOKEN("secondaryAccessToken"),
     SECRET("secret"),
     UPDATEDBY("updatedBy"),
     UPDATEDDATE("updatedDate"),
@@ -69,7 +69,6 @@ public class DConnectionMapper
 
     // set all fields:
     entity.setAccessToken(supplier.getString(value, Field.ACCESSTOKEN.getFieldName()));
-    entity.setAppArg0(supplier.getString(value, Field.APPARG0.getFieldName()));
     entity.setCreatedBy(supplier.getString(value, Field.CREATEDBY.getFieldName()));
     entity.setCreatedDate(supplier.getDate(value, Field.CREATEDDATE.getFieldName()));
     entity.setDisplayName(supplier.getString(value, Field.DISPLAYNAME.getFieldName()));
@@ -79,6 +78,7 @@ public class DConnectionMapper
     entity.setProviderId(supplier.getString(value, Field.PROVIDERID.getFieldName()));
     entity.setProviderUserId(supplier.getString(value, Field.PROVIDERUSERID.getFieldName()));
     entity.setRefreshToken(supplier.getString(value, Field.REFRESHTOKEN.getFieldName()));
+    entity.setSecondaryAccessToken(supplier.getString(value, Field.SECONDARYACCESSTOKEN.getFieldName()));
     entity.setSecret(supplier.getString(value, Field.SECRET.getFieldName()));
     entity.setUpdatedBy(supplier.getString(value, Field.UPDATEDBY.getFieldName()));
     entity.setUpdatedDate(supplier.getDate(value, Field.UPDATEDDATE.getFieldName()));
@@ -149,7 +149,6 @@ public class DConnectionMapper
 
     // set all fields:
     supplier.setString(value, Field.ACCESSTOKEN.getFieldName(), entity.getAccessToken());
-    supplier.setString(value, Field.APPARG0.getFieldName(), entity.getAppArg0());
     supplier.setString(value, Field.CREATEDBY.getFieldName(), entity.getCreatedBy());
     supplier.setDate(value, Field.CREATEDDATE.getFieldName(), entity.getCreatedDate());
     supplier.setString(value, Field.DISPLAYNAME.getFieldName(), entity.getDisplayName());
@@ -159,6 +158,7 @@ public class DConnectionMapper
     supplier.setString(value, Field.PROVIDERID.getFieldName(), entity.getProviderId());
     supplier.setString(value, Field.PROVIDERUSERID.getFieldName(), entity.getProviderUserId());
     supplier.setString(value, Field.REFRESHTOKEN.getFieldName(), entity.getRefreshToken());
+    supplier.setString(value, Field.SECONDARYACCESSTOKEN.getFieldName(), entity.getSecondaryAccessToken());
     supplier.setString(value, Field.SECRET.getFieldName(), entity.getSecret());
     supplier.setString(value, Field.UPDATEDBY.getFieldName(), entity.getUpdatedBy());
     supplier.setDate(value, Field.UPDATEDDATE.getFieldName(), entity.getUpdatedDate());
@@ -184,11 +184,6 @@ public class DConnectionMapper
 
     public Builder accessToken(String accessToken) {
       entity.setAccessToken(accessToken);
-      return this;
-    }
-
-    public Builder appArg0(String appArg0) {
-      entity.setAppArg0(appArg0);
       return this;
     }
 
@@ -234,6 +229,11 @@ public class DConnectionMapper
 
     public Builder refreshToken(String refreshToken) {
       entity.setRefreshToken(refreshToken);
+      return this;
+    }
+
+    public Builder secondaryAccessToken(String secondaryAccessToken) {
+      entity.setSecondaryAccessToken(secondaryAccessToken);
       return this;
     }
 

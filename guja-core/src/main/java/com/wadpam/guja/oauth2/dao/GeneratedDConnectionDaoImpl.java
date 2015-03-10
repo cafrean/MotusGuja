@@ -21,7 +21,7 @@ import com.wadpam.guja.oauth2.domain.DConnection;
 /**
  * The DConnection domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2015-01-20T22:12:36.907+0100.
+ * Generated on 2015-03-10T15:11:21.539+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDConnectionDaoImpl
@@ -42,15 +42,6 @@ public class GeneratedDConnectionDaoImpl
    */
   public DConnection findByAccessToken(java.lang.String accessToken) {
     return queryUniqueByField(null, DConnectionMapper.Field.ACCESSTOKEN.getFieldName(), accessToken);
-  }
-
-  /**
-   * query-by method for field appArg0
-   * @param appArg0 the specified attribute
-   * @return an Iterable of DConnections for the specified appArg0
-   */
-  public Iterable<DConnection> queryByAppArg0(java.lang.String appArg0) {
-    return queryByField(null, DConnectionMapper.Field.APPARG0.getFieldName(), appArg0);
   }
 
   /**
@@ -132,6 +123,15 @@ public class GeneratedDConnectionDaoImpl
    */
   public DConnection findByRefreshToken(java.lang.String refreshToken) {
     return queryUniqueByField(null, DConnectionMapper.Field.REFRESHTOKEN.getFieldName(), refreshToken);
+  }
+
+  /**
+   * query-by method for field secondaryAccessToken
+   * @param secondaryAccessToken the specified attribute
+   * @return an Iterable of DConnections for the specified secondaryAccessToken
+   */
+  public Iterable<DConnection> queryBySecondaryAccessToken(java.lang.String secondaryAccessToken) {
+    return queryByField(null, DConnectionMapper.Field.SECONDARYACCESSTOKEN.getFieldName(), secondaryAccessToken);
   }
 
   /**
