@@ -54,7 +54,7 @@ public class OAuth2Filter implements Filter {
 
   public static final String NAME_ACCESS_TOKEN = "access_token";
     public static final String NAME_LIFELOG_ACCESS_TOKEN = "lifelog_access_token";
-    public static final String NAME_UNNAMED_ACCESS_TOKEN = "unnamed_access_token";
+    public static final String NAME_HEALTHGRAPH_ACCESS_TOKEN = "healthgraph_access_token";
     public static final String NAME_USER_ID = "oauth2user.id";
     public static final String NAME_CONNECTION = "oauth2connection";
     public static final String NAME_ROLES = "oauth2user.roles";
@@ -103,7 +103,7 @@ public class OAuth2Filter implements Filter {
         request.setAttribute(NAME_USER_ID, conn.getUserId());
         request.setAttribute(NAME_ROLES, conn.getRoles());
           request.setAttribute(NAME_LIFELOG_ACCESS_TOKEN, conn.getLifelogAccessToken());
-          request.setAttribute(NAME_UNNAMED_ACCESS_TOKEN, conn.getUnnamedAccessToken());
+          request.setAttribute(NAME_HEALTHGRAPH_ACCESS_TOKEN, conn.getHealthGraphAccessToken());
 
 
       } else {

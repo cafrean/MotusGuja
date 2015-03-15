@@ -12,7 +12,7 @@ import com.wadpam.guja.oauth2.domain.DConnection;
 /**
  * The DConnection domain-object specific mapping methods go here.
  *
- * Generated on 2015-03-10T16:07:02.445+0100.
+ * Generated on 2015-03-15T13:42:19.824+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class DConnectionMapper
@@ -27,6 +27,7 @@ public class DConnectionMapper
     CREATEDDATE("createdDate"),
     DISPLAYNAME("displayName"),
     EXPIRETIME("expireTime"),
+    HEALTHGRAPHACCESSTOKEN("healthGraphAccessToken"),
     IMAGEURL("imageUrl"),
     LIFELOGACCESSTOKEN("lifelogAccessToken"),
     PROFILEURL("profileUrl"),
@@ -34,7 +35,6 @@ public class DConnectionMapper
     PROVIDERUSERID("providerUserId"),
     REFRESHTOKEN("refreshToken"),
     SECRET("secret"),
-    UNNAMEDACCESSTOKEN("unnamedAccessToken"),
     UPDATEDBY("updatedBy"),
     UPDATEDDATE("updatedDate"),
     USERID("userId"),
@@ -74,6 +74,7 @@ public class DConnectionMapper
     entity.setCreatedDate(supplier.getDate(value, Field.CREATEDDATE.getFieldName()));
     entity.setDisplayName(supplier.getString(value, Field.DISPLAYNAME.getFieldName()));
     entity.setExpireTime(supplier.getDate(value, Field.EXPIRETIME.getFieldName()));
+    entity.setHealthGraphAccessToken(supplier.getString(value, Field.HEALTHGRAPHACCESSTOKEN.getFieldName()));
     entity.setImageUrl(supplier.getString(value, Field.IMAGEURL.getFieldName()));
     entity.setLifelogAccessToken(supplier.getString(value, Field.LIFELOGACCESSTOKEN.getFieldName()));
     entity.setProfileUrl(supplier.getString(value, Field.PROFILEURL.getFieldName()));
@@ -81,7 +82,6 @@ public class DConnectionMapper
     entity.setProviderUserId(supplier.getString(value, Field.PROVIDERUSERID.getFieldName()));
     entity.setRefreshToken(supplier.getString(value, Field.REFRESHTOKEN.getFieldName()));
     entity.setSecret(supplier.getString(value, Field.SECRET.getFieldName()));
-    entity.setUnnamedAccessToken(supplier.getString(value, Field.UNNAMEDACCESSTOKEN.getFieldName()));
     entity.setUpdatedBy(supplier.getString(value, Field.UPDATEDBY.getFieldName()));
     entity.setUpdatedDate(supplier.getDate(value, Field.UPDATEDDATE.getFieldName()));
     entity.setUserId(supplier.getLong(value, Field.USERID.getFieldName()));
@@ -155,6 +155,7 @@ public class DConnectionMapper
     supplier.setDate(value, Field.CREATEDDATE.getFieldName(), entity.getCreatedDate());
     supplier.setString(value, Field.DISPLAYNAME.getFieldName(), entity.getDisplayName());
     supplier.setDate(value, Field.EXPIRETIME.getFieldName(), entity.getExpireTime());
+    supplier.setString(value, Field.HEALTHGRAPHACCESSTOKEN.getFieldName(), entity.getHealthGraphAccessToken());
     supplier.setString(value, Field.IMAGEURL.getFieldName(), entity.getImageUrl());
     supplier.setString(value, Field.LIFELOGACCESSTOKEN.getFieldName(), entity.getLifelogAccessToken());
     supplier.setString(value, Field.PROFILEURL.getFieldName(), entity.getProfileUrl());
@@ -162,7 +163,6 @@ public class DConnectionMapper
     supplier.setString(value, Field.PROVIDERUSERID.getFieldName(), entity.getProviderUserId());
     supplier.setString(value, Field.REFRESHTOKEN.getFieldName(), entity.getRefreshToken());
     supplier.setString(value, Field.SECRET.getFieldName(), entity.getSecret());
-    supplier.setString(value, Field.UNNAMEDACCESSTOKEN.getFieldName(), entity.getUnnamedAccessToken());
     supplier.setString(value, Field.UPDATEDBY.getFieldName(), entity.getUpdatedBy());
     supplier.setDate(value, Field.UPDATEDDATE.getFieldName(), entity.getUpdatedDate());
     supplier.setLong(value, Field.USERID.getFieldName(), entity.getUserId());
@@ -210,6 +210,11 @@ public class DConnectionMapper
       return this;
     }
 
+    public Builder healthGraphAccessToken(String healthGraphAccessToken) {
+      entity.setHealthGraphAccessToken(healthGraphAccessToken);
+      return this;
+    }
+
     public Builder imageUrl(String imageUrl) {
       entity.setImageUrl(imageUrl);
       return this;
@@ -242,11 +247,6 @@ public class DConnectionMapper
 
     public Builder secret(String secret) {
       entity.setSecret(secret);
-      return this;
-    }
-
-    public Builder unnamedAccessToken(String unnamedAccessToken) {
-      entity.setUnnamedAccessToken(unnamedAccessToken);
       return this;
     }
 

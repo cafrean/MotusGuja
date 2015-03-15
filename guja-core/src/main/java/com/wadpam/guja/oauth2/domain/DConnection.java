@@ -55,7 +55,7 @@ public class DConnection extends AbstractLongEntity {
     private String lifelogAccessToken;
 
     @Basic
-    private String unnamedAccessToken;
+    private String healthGraphAccessToken;
 
     @Basic
     private String displayName;
@@ -89,8 +89,8 @@ public class DConnection extends AbstractLongEntity {
 
     @Override
     public String subString() {
-        return String.format("%s, accessToken=%s, userId=%s, lifelogAccessToken=%s, unnamedAccessToken=%s userRoles=%s",
-                super.subString(), accessToken, userId, lifelogAccessToken, unnamedAccessToken, userRoles);
+        return String.format("%s, accessToken=%s, userId=%s, lifelogAccessToken=%s, healthGraphAccessToken=%s userRoles=%s",
+                super.subString(), accessToken, userId, lifelogAccessToken, healthGraphAccessToken, userRoles);
     }
 
     public static ArrayList<String> convertRoles(String from) {
@@ -204,12 +204,12 @@ public class DConnection extends AbstractLongEntity {
         return convertRoles(userRoles);
     }
 
-    public String getUnnamedAccessToken() {
-        return unnamedAccessToken;
+    public String getHealthGraphAccessToken() {
+        return healthGraphAccessToken;
     }
 
-    public void setUnnamedAccessToken(String unnamedAccessToken) {
-        this.unnamedAccessToken = unnamedAccessToken;
+    public void setHealthGraphAccessToken(String healthGraphAccessToken) {
+        this.healthGraphAccessToken = healthGraphAccessToken;
     }
 
 }

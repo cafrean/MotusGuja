@@ -21,7 +21,7 @@ import com.wadpam.guja.i18n.domain.Di18n;
 /**
  * The Di18n domain-object specific finders and methods go in this POJO.
  * 
- * Generated on 2015-03-10T16:07:02.019+0100.
+ * Generated on 2015-03-15T13:42:19.392+0100.
  * @author mardao DAO generator (net.sf.mardao.plugin.ProcessDomainMojo)
  */
 public class GeneratedDi18nDaoImpl
