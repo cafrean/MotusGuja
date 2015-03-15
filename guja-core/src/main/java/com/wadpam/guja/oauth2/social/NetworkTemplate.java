@@ -53,7 +53,10 @@ public class NetworkTemplate {
 
   public static final String MIME_JSON = "application/json";
   public static final String MIME_FORM = "application/x-www-form-urlencoded";
-  public static final String MIME_CHARSET = "charset=";
+    public static final String MIME_CHARSET = "charset=";
+
+    // Added to include support for HealthGraphs "proprietary" MIME-type.
+    public static final String[] MIME_JSON_SPLIT = {"application", "json"};
 
   public static final String SEPARATOR_QUERY = "?";
   public static final String SEPARATOR_FRAGMENT = "#";
@@ -133,10 +136,10 @@ public class NetworkTemplate {
       LOG.info("{} {}", method, url);
 
       // Accept
-      if (null != accept) {
-        con.addRequestProperty(ACCEPT, accept);
-        LOG.trace("{}: {}", ACCEPT, accept);
-      }
+//      if (null != accept) {
+//        con.addRequestProperty(ACCEPT, accept);
+//        LOG.trace("{}: {}", ACCEPT, accept);
+//      }
 
       // Authorization
       if (null != authorization) {
@@ -200,9 +203,9 @@ public class NetworkTemplate {
         LOG.debug("Content-Type: {}", responseType);
         in = con.getInputStream();
 
-        if (con.getContentType().startsWith(MIME_JSON)) {
-          response.setBody(MAPPER.readValue(in, responseClass));
-          LOG.debug("Response JSON: {}", response.getBody());
+        if (con.getContentType().contains(MIME_JSON_SPLIT[0]) && con.getContentType().contains(MIME_JSON_SPLIT[1])) {
+            response.setBody(MAPPER.readValue(in, responseClass));
+            LOG.debug("Response JSON: {}", response.getBody());
         } else if (String.class.equals(responseClass)) {
           String s = readResponseAsString(in, responseType);
           LOG.info("Read {} bytes from {}", s.length(), con.getContentType());

@@ -35,10 +35,7 @@ import com.wadpam.guja.oauth2.domain.DFactory;
 import com.wadpam.guja.oauth2.domain.DOAuth2User;
 import com.wadpam.guja.oauth2.provider.Oauth2UserProvider;
 import com.wadpam.guja.oauth2.provider.TokenGenerator;
-import com.wadpam.guja.oauth2.social.LifelogProfile;
-import com.wadpam.guja.oauth2.social.LifelogTemplate;
-import com.wadpam.guja.oauth2.social.SocialProfile;
-import com.wadpam.guja.oauth2.social.SocialTemplate;
+import com.wadpam.guja.oauth2.social.*;
 import com.wadpam.guja.web.JsonCharacterEncodingResponseFilter;
 import com.wadpam.guja.oauth2.web.OAuth2Filter;
 import org.joda.time.DateTime;
@@ -205,21 +202,37 @@ public class OAuth2FederatedResource {
             String debug) throws IOException {
 
         checkNotNull(lifelogAccessToken);
-        // TODO: Check if healthGraphAccessToken is null.
+        checkNotNull(healthGraphAccessToken);
         checkNotNull(providerId);
 
         if (null == expiresInSeconds) {
             expiresInSeconds = tokenExpiresIn;
         }
 
-        LifelogProfile profile = null;
+        LifelogProfile lifelogProfile = null;
+        HealthGraphProfile healthGraphProfile = null;
+        LOGGER.info(String.format("Got HG token: %s", healthGraphAccessToken));
         if(debug == null) {
             // use the connectionFactory
+
+            // Check if HealthGraph token is valid and profile is retrievable.
+            final HealthGraphTemplate healthGraphTemplate = HealthGraphTemplate.create(providerId, healthGraphAccessToken, null);
+
+            try {
+                healthGraphProfile = healthGraphTemplate.getProfile();
+                if (null == healthGraphProfile) {
+                    throw new UnauthorizedRestException("Invalid connection");
+                }
+            } catch (IOException unauthorized) {
+                throw new UnauthorizedRestException("Unauthorized federated side");
+            }
+
+            // Check if Lifelog token is valid and profile is retrievable.
             final LifelogTemplate lifelogTemplate = LifelogTemplate.create(providerId, lifelogAccessToken, null);
 
             try {
-                profile = lifelogTemplate.getProfile();
-                if (null == profile) {
+                lifelogProfile = lifelogTemplate.getProfile();
+                if (null == lifelogProfile) {
                     throw new UnauthorizedRestException("Invalid connection");
                 }
             } catch (IOException unauthorized) {
@@ -227,7 +240,7 @@ public class OAuth2FederatedResource {
             }
 
             // providerUserId is optional, fetch it if necessary:
-            final String realProviderUserId = profile.getUserName();
+            final String realProviderUserId = lifelogProfile.getUserName();
             if (null == providerUserId) {
                 providerUserId = realProviderUserId;
             } else if (!providerUserId.equals(realProviderUserId)) {
@@ -251,7 +264,7 @@ public class OAuth2FederatedResource {
             if(debug != null){
                 user.setDisplayName("debugUser");
             }else{
-                user.setDisplayName(profile.getUserName());
+                user.setDisplayName(lifelogProfile.getUserName());
             }
 
             user.setRoles(OAuth2UserResource.DEFAULT_ROLES_USER);
