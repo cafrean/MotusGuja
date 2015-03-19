@@ -202,7 +202,7 @@ public class OAuth2FederatedResource {
             String debug) throws IOException {
 
         checkNotNull(lifelogAccessToken);
-        checkNotNull(healthGraphAccessToken);
+        // checkNotNull(healthGraphAccessToken);
         checkNotNull(providerId);
 
         if (null == expiresInSeconds) {
@@ -211,21 +211,21 @@ public class OAuth2FederatedResource {
 
         LifelogProfile lifelogProfile = null;
         HealthGraphProfile healthGraphProfile = null;
-        LOGGER.info(String.format("Got HG token: %s", healthGraphAccessToken));
+        // LOGGER.info(String.format("Got HG token: %s", healthGraphAccessToken));
         if(debug == null) {
             // use the connectionFactory
 
             // Check if HealthGraph token is valid and profile is retrievable.
-            final HealthGraphTemplate healthGraphTemplate = HealthGraphTemplate.create(providerId, healthGraphAccessToken, null);
+           // final HealthGraphTemplate healthGraphTemplate = HealthGraphTemplate.create(providerId, healthGraphAccessToken, null);
 
-            try {
-                healthGraphProfile = healthGraphTemplate.getProfile();
-                if (null == healthGraphProfile) {
-                    throw new UnauthorizedRestException("Invalid connection");
-                }
-            } catch (IOException unauthorized) {
-                throw new UnauthorizedRestException("Unauthorized federated side");
-            }
+          //  try {
+            //    healthGraphProfile = healthGraphTemplate.getProfile();
+             //   if (null == healthGraphProfile) {
+            //        throw new UnauthorizedRestException("Invalid connection");
+           //     }
+         //   } catch (IOException unauthorized) {
+         //       throw new UnauthorizedRestException("Unauthorized federated side");
+        //    }
 
             // Check if Lifelog token is valid and profile is retrievable.
             final LifelogTemplate lifelogTemplate = LifelogTemplate.create(providerId, lifelogAccessToken, null);
