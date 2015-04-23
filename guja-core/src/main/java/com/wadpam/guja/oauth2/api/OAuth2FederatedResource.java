@@ -216,16 +216,16 @@ public class OAuth2FederatedResource {
             // use the connectionFactory
 
             // Check if HealthGraph token is valid and profile is retrievable.
-           // final HealthGraphTemplate healthGraphTemplate = HealthGraphTemplate.create(providerId, healthGraphAccessToken, null);
+           final HealthGraphTemplate healthGraphTemplate = HealthGraphTemplate.create(providerId, healthGraphAccessToken, null);
 
-          //  try {
-            //    healthGraphProfile = healthGraphTemplate.getProfile();
-             //   if (null == healthGraphProfile) {
-            //        throw new UnauthorizedRestException("Invalid connection");
-           //     }
-         //   } catch (IOException unauthorized) {
-         //       throw new UnauthorizedRestException("Unauthorized federated side");
-        //    }
+            try {
+                healthGraphProfile = healthGraphTemplate.getProfile();
+                if (null == healthGraphProfile) {
+                    throw new UnauthorizedRestException("Invalid connection");
+                }
+            } catch (IOException unauthorized) {
+                throw new UnauthorizedRestException("Unauthorized federated side (HealthGraph)");
+            }
 
             // Check if Lifelog token is valid and profile is retrievable.
             final LifelogTemplate lifelogTemplate = LifelogTemplate.create(providerId, lifelogAccessToken, null);
@@ -236,7 +236,7 @@ public class OAuth2FederatedResource {
                     throw new UnauthorizedRestException("Invalid connection");
                 }
             } catch (IOException unauthorized) {
-                throw new UnauthorizedRestException("Unauthorized federated side");
+                throw new UnauthorizedRestException("Unauthorized federated side (Lifelog)");
             }
 
             // providerUserId is optional, fetch it if necessary:
@@ -298,6 +298,9 @@ public class OAuth2FederatedResource {
                 // Update both third-party access tokens at once, for convenience.
                 connection.setLifelogAccessToken(lifelogAccessToken);
                 connection.setHealthGraphAccessToken(healthGraphAccessToken);
+
+                LOGGER.info(String.format("Remaining time until token expires: %s ms. Refreshing.", (System.currentTimeMillis() - connection.getExpireTime().getTime())));
+                connection.setExpireTime(calculateExpirationDate(4601));
             }
         }else{
             connection = createDebugUser(connection, lifelogAccessToken, healthGraphAccessToken, user, providerUserId);
