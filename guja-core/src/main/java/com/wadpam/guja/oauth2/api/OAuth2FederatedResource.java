@@ -155,11 +155,10 @@ public class OAuth2FederatedResource {
             @QueryParam("secret") String secret,
             @QueryParam("expires_in") @DefaultValue("4601") Integer expiresIn,
             @QueryParam("lifelogAccessToken") String lifelogAccessToken,
-            @QueryParam("healthGraphAccessToken") String healthGraphAccessToken,
-            @QueryParam("debug") String debug
+            @QueryParam("healthGraphAccessToken") String healthGraphAccessToken
     ) throws IOException {
         return registerFederated(access_token, providerId, providerUserId,
-                secret, expiresIn, lifelogAccessToken, healthGraphAccessToken, debug);
+                secret, expiresIn, lifelogAccessToken, healthGraphAccessToken);
     }
 
 
@@ -183,11 +182,10 @@ public class OAuth2FederatedResource {
             @QueryParam("secret") String secret,
             @QueryParam("expires_in") @DefaultValue("4601") Integer expiresIn,
             @QueryParam("lifelogAccessToken") String lifelogAccessToken,
-            @QueryParam("healthGraphAccessToken") String healthGraphAccessToken,
-            @QueryParam("debug") String debug // TEMPORARY. Used for development.
+            @QueryParam("healthGraphAccessToken") String healthGraphAccessToken
     ) throws IOException {
         return registerFederated(access_token, providerId, providerUserId,
-                secret, expiresIn, lifelogAccessToken, healthGraphAccessToken, debug);
+                secret, expiresIn, lifelogAccessToken, healthGraphAccessToken);
     }
 
 
@@ -198,8 +196,7 @@ public class OAuth2FederatedResource {
             String secret,
             Integer expiresInSeconds,
             String lifelogAccessToken,
-            String healthGraphAccessToken,
-            String debug) throws IOException {
+            String healthGraphAccessToken) throws IOException {
 
         checkNotNull(lifelogAccessToken);
         // checkNotNull(healthGraphAccessToken);
@@ -212,43 +209,42 @@ public class OAuth2FederatedResource {
         LifelogProfile lifelogProfile = null;
         HealthGraphProfile healthGraphProfile = null;
         // LOGGER.info(String.format("Got HG token: %s", healthGraphAccessToken));
-        if(debug == null) {
-            // use the connectionFactory
 
-            // Check if HealthGraph token is valid and profile is retrievable.
-           final HealthGraphTemplate healthGraphTemplate = HealthGraphTemplate.create(providerId, healthGraphAccessToken, null);
+        // use the connectionFactory
 
-            try {
-                healthGraphProfile = healthGraphTemplate.getProfile();
-                if (null == healthGraphProfile) {
-                    throw new UnauthorizedRestException("Invalid connection");
-                }
-            } catch (IOException unauthorized) {
-                throw new UnauthorizedRestException("Unauthorized federated side (HealthGraph)");
+        // Check if HealthGraph token is valid and profile is retrievable.
+        final HealthGraphTemplate healthGraphTemplate = HealthGraphTemplate.create(providerId, healthGraphAccessToken, null);
+
+        try {
+            healthGraphProfile = healthGraphTemplate.getProfile();
+            if (null == healthGraphProfile) {
+                throw new UnauthorizedRestException("Invalid connection");
             }
-
-            // Check if Lifelog token is valid and profile is retrievable.
-            final LifelogTemplate lifelogTemplate = LifelogTemplate.create(providerId, lifelogAccessToken, null);
-
-            try {
-                lifelogProfile = lifelogTemplate.getProfile();
-                if (null == lifelogProfile) {
-                    throw new UnauthorizedRestException("Invalid connection");
-                }
-            } catch (IOException unauthorized) {
-                throw new UnauthorizedRestException("Unauthorized federated side (Lifelog)");
-            }
-
-            // providerUserId is optional, fetch it if necessary:
-            final String realProviderUserId = lifelogProfile.getUserName();
-            if (null == providerUserId) {
-                providerUserId = realProviderUserId;
-            } else if (!providerUserId.equals(realProviderUserId)) {
-                throw new UnauthorizedRestException("Unauthorized federated side mismatch");
-            }
-
-            LOGGER.info("Got provideruserID: " + providerUserId);
+        } catch (IOException unauthorized) {
+            throw new UnauthorizedRestException("Unauthorized federated side (HealthGraph)");
         }
+
+        // Check if Lifelog token is valid and profile is retrievable.
+        final LifelogTemplate lifelogTemplate = LifelogTemplate.create(providerId, lifelogAccessToken, null);
+
+        try {
+            lifelogProfile = lifelogTemplate.getProfile();
+            if (null == lifelogProfile) {
+                throw new UnauthorizedRestException("Invalid connection");
+            }
+        } catch (IOException unauthorized) {
+            throw new UnauthorizedRestException("Unauthorized federated side (Lifelog)");
+        }
+
+        // providerUserId is optional, fetch it if necessary:
+        final String realProviderUserId = lifelogProfile.getUserName();
+        if (null == providerUserId) {
+            providerUserId = realProviderUserId;
+        } else if (!providerUserId.equals(realProviderUserId)) {
+            throw new UnauthorizedRestException("Unauthorized federated side mismatch");
+        }
+
+        LOGGER.info("Got provideruserID: " + providerUserId);
 
 
         // load connection from db async style (likely case is new token for existing user)
@@ -261,11 +257,7 @@ public class OAuth2FederatedResource {
             // Create new oauth2 user
             user = userProvider.createUser();
 
-            if(debug != null){
-                user.setDisplayName("debugUser");
-            }else{
-                user.setDisplayName(lifelogProfile.getUserName());
-            }
+            user.setDisplayName(lifelogProfile.getUserName());
 
             user.setRoles(OAuth2UserResource.DEFAULT_ROLES_USER);
 
@@ -278,34 +270,30 @@ public class OAuth2FederatedResource {
         // load existing conn for token
         DConnection connection = connectionDao.findByAccessToken(access_token);
 
-        if(debug == null) {
+        if (null == connection) {
 
-            if (null == connection) {
+            connection = new DConnection();
+            connection.setAccessToken(accessTokenGenerator.generate());
+            connection.setLifelogAccessToken(lifelogAccessToken);
+            connection.setHealthGraphAccessToken(healthGraphAccessToken);
+            // TODO: Change provider ID to something more relevant.
+            connection.setProviderId("self");
+            connection.setProviderUserId(providerUserId);
+            connection.setSecret(secret);
+            connection.setDisplayName(user.getDisplayName());
+            connection.setUserId(user.getId());
+            connection.setExpireTime(calculateExpirationDate(expiresInSeconds));
 
-                connection = new DConnection();
-                connection.setAccessToken(accessTokenGenerator.generate());
-                connection.setLifelogAccessToken(lifelogAccessToken);
-                connection.setHealthGraphAccessToken(healthGraphAccessToken);
-                // TODO: Change provider ID to something more relevant.
-                connection.setProviderId("self");
-                connection.setProviderUserId(providerUserId);
-                connection.setSecret(secret);
-                connection.setDisplayName(user.getDisplayName());
-                connection.setUserId(user.getId());
-                connection.setExpireTime(calculateExpirationDate(expiresInSeconds));
+        } else {
+            // Update both third-party access tokens at once, for convenience.
+            connection.setLifelogAccessToken(lifelogAccessToken);
+            connection.setHealthGraphAccessToken(healthGraphAccessToken);
 
-            } else {
-                // Update both third-party access tokens at once, for convenience.
-                connection.setLifelogAccessToken(lifelogAccessToken);
-                connection.setHealthGraphAccessToken(healthGraphAccessToken);
-
-                LOGGER.info(String.format("Remaining time until token expires: %s ms. Refreshing.", (System.currentTimeMillis() - connection.getExpireTime().getTime())));
-                connection.setExpireTime(calculateExpirationDate(4601));
-            }
-        }else{
-            connection = createDebugUser(connection, lifelogAccessToken, healthGraphAccessToken, user, providerUserId);
+            LOGGER.info(String.format("Remaining time until token expires: %s ms. Refreshing.", (System.currentTimeMillis() - connection.getExpireTime().getTime())));
+            connection.setExpireTime(calculateExpirationDate(4601));
         }
-        
+
+
         // Always update some properties
         connection.setUserRoles(OAuth2AuthorizationResource.convertRoles(user.getRoles()));
         connectionDao.put(connection);
@@ -317,31 +305,6 @@ public class OAuth2FederatedResource {
                 .cookie(createCookie(connection.getAccessToken(), null != expiresInSeconds ? expiresInSeconds : tokenExpiresIn))
                 .entity(connection)
                 .build();
-    }
-
-    /**
-     * DEBUG METHOD. ONLY USED FOR DEVELOPMENT.
-     */
-    private DConnection createDebugUser(DConnection connection, String lifelogAccessToken, String healthGraphAccessToken, DOAuth2User user, String providerUserId){
-        if(connection == null) {
-            connection = new DConnection();
-            connection.setAccessToken(accessTokenGenerator.generate());
-            connection.setLifelogAccessToken(lifelogAccessToken);
-            connection.setHealthGraphAccessToken(healthGraphAccessToken);
-            // TODO: Change provider ID to something more relevant.
-            connection.setProviderId("self");
-            connection.setProviderUserId(providerUserId);
-            connection.setSecret("debugSecret");
-            connection.setDisplayName("debugDisplayName");
-            connection.setUserId(user.getId());
-            connection.setExpireTime(calculateExpirationDate(4601));
-        }else{
-            // Update both third-party access tokens at once, for convenience.
-            connection.setLifelogAccessToken(lifelogAccessToken);
-            connection.setHealthGraphAccessToken(healthGraphAccessToken);
-        }
-
-        return connection;
     }
 
     private void removeExpiredConnections(String providerId, Iterable<DConnection> connections) {
