@@ -81,6 +81,9 @@ public class DConnection extends AbstractLongEntity {
     @Basic
     private String secret;
 
+    @Basic
+    private String userName;
+
     /**
      * Comma-separated String, populated by registerFederated()
      */
@@ -89,8 +92,8 @@ public class DConnection extends AbstractLongEntity {
 
     @Override
     public String subString() {
-        return String.format("%s, accessToken=%s, userId=%s, lifelogAccessToken=%s, healthGraphAccessToken=%s userRoles=%s",
-                super.subString(), accessToken, userId, lifelogAccessToken, healthGraphAccessToken, userRoles);
+        return String.format("%s, accessToken=%s, userId=%s, lifelogAccessToken=%s, healthGraphAccessToken=%s, userRoles=%s, userName=%s, imageUrl=%s",
+                super.subString(), accessToken, userId, lifelogAccessToken, healthGraphAccessToken, userRoles, userName, imageUrl);
     }
 
     public static ArrayList<String> convertRoles(String from) {
@@ -102,6 +105,14 @@ public class DConnection extends AbstractLongEntity {
             }
         }
         return to;
+    }
+
+    public void setUserName(String userName){
+        this.userName = userName;
+    }
+
+    public String getUserName(){
+        return userName;
     }
 
     public String getAccessToken() {

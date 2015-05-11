@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by Fredrik Andersson on 2015-03-15.
@@ -14,7 +15,8 @@ public class HealthGraphTemplate extends NetworkTemplate {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(HealthGraphTemplate.class);
 
-    public static final String BASE_URL_HEALTHGRAPH = "https://api.runkeeper.com/user/";
+    public static final String BASE_URL_HEALTHGRAPH = "https://api.runkeeper.com";
+    private final String USER_ENDPOINT = "/user";
 
     protected final String access_token;
 
@@ -24,7 +26,7 @@ public class HealthGraphTemplate extends NetworkTemplate {
     }
 
     public static HealthGraphTemplate create(String providerId, String access_token,
-                                         String domain) {
+                                             String domain) {
 
         if (FactoryResource.PROVIDER_ID_LIFELOG.equals(providerId)) {
             return new HealthGraphTemplate(access_token, BASE_URL_HEALTHGRAPH);
@@ -37,8 +39,17 @@ public class HealthGraphTemplate extends NetworkTemplate {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Authorization", String.format("Bearer %s", access_token));
 
-        Map<String, Object> props = get(getBaseUrl(), headers, Map.class);
-        return parseProfile(props);
+        Map<String, Object> userInfo = get(getBaseUrl() + USER_ENDPOINT, headers, Map.class);
+        LOGGER.info(String.format("Map to string: %s", userInfo));
+        Map<String, Object> profile = null;
+
+        if (userInfo.containsKey("profile")) {
+            String profileUri = (String) userInfo.get("profile");
+            LOGGER.info(String.format("Got profile URI: %s", profileUri));
+            profile = get(getBaseUrl() + profileUri, headers, Map.class);
+        }
+
+        return parseProfile(profile);
     }
 
     @Override
@@ -52,13 +63,42 @@ public class HealthGraphTemplate extends NetworkTemplate {
 
 
     protected HealthGraphProfile parseProfile(Map<String, Object> props) {
-        if (props == null || !props.containsKey("userID")) {
+
+
+        if (props == null || !props.containsKey("elite")) {
             throw new IllegalArgumentException("Could not fetch result");
         }
 
-        HealthGraphProfile profile = HealthGraphProfile.with(props)
-                .userId("userID");
+        LOGGER.info(String.format("Profile response contents: %s", props.toString()));
 
+        String imageUrl = "";
+
+
+        // Since there is no way to tell what sort of image Healthgraph will send, or if the user name will be included, the awful mess below is necessary...
+
+        if(props.containsKey("large_picture")){
+            imageUrl = (String)props.get("large_picture");
+        }else if(props.containsKey("medium_picture")){
+            imageUrl = (String)props.get("medium_picture");
+        }else if(props.containsKey("normal_picture")){
+            imageUrl = (String)props.get("normal_picture");
+        }else if(props.containsKey("small_picture")){
+            imageUrl = (String)props.get("small_picture");
+        }
+
+
+
+        HealthGraphProfile profile = new HealthGraphProfile(props);
+
+        // Set user name (if it exists)
+        if(props.containsKey("name")){
+            profile.setUserName((String) props.get("name"));
+        }
+
+        // Set image URI (if it exists)
+        if(!imageUrl.isEmpty()){
+            profile.setImageUri(null);
+        }
 
         return profile;
     }

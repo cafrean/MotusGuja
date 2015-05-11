@@ -199,7 +199,7 @@ public class OAuth2FederatedResource {
             String healthGraphAccessToken) throws IOException {
 
         checkNotNull(lifelogAccessToken);
-        // checkNotNull(healthGraphAccessToken);
+        checkNotNull(healthGraphAccessToken);
         checkNotNull(providerId);
 
         if (null == expiresInSeconds) {
@@ -283,7 +283,8 @@ public class OAuth2FederatedResource {
             connection.setDisplayName(user.getDisplayName());
             connection.setUserId(user.getId());
             connection.setExpireTime(calculateExpirationDate(expiresInSeconds));
-
+            connection.setUserName(healthGraphProfile.getUserName());
+            connection.setImageUrl(healthGraphProfile.getImageUri());
         } else {
             // Update both third-party access tokens at once, for convenience.
             connection.setLifelogAccessToken(lifelogAccessToken);

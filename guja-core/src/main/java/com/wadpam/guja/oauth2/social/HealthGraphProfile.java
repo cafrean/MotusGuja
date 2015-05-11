@@ -8,6 +8,8 @@ import java.util.Map;
 public class HealthGraphProfile {
 
     private String userId;
+    private String imageUri;
+    private String userName;
 
     private Map<String, Object> props = null;
 
@@ -15,7 +17,7 @@ public class HealthGraphProfile {
         this.props = props;
     }
 
-    public HealthGraphProfile build(){
+    public HealthGraphProfile build() {
         props = null;
         return this;
     }
@@ -35,11 +37,37 @@ public class HealthGraphProfile {
         return this;
     }
 
+    public HealthGraphProfile userName(String propertyName) {
+        this.userName = (String) props.get(propertyName).toString();
+        return this;
+    }
+
+    public HealthGraphProfile imageUri(String propertyName) {
+        this.imageUri = (String) props.get(propertyName).toString();
+        return this;
+    }
+
     public String getUserId() {
         return userId;
     }
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
