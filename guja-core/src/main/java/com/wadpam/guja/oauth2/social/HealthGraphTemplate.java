@@ -97,7 +97,7 @@ public class HealthGraphTemplate extends NetworkTemplate {
 
         // Set image URI (if it exists)
         if(!imageUrl.isEmpty()){
-            profile.setImageUri(null);
+            profile.setImageUri(imageUrl);
         }
 
         return profile;
